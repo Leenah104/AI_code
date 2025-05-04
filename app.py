@@ -101,7 +101,7 @@ with st.form("task_form"):
          st.session_state.tasks.append(Task(task_name, task_duration, task_priority))
          st.success("Task added successfully!")
         
-if st.button("Schedule Tasks (AI Version)"):
+if st.button("Schedule Tasks"):
   if st.session_state.tasks:
     scheduler = TaskSchedulerAI(st.session_state.tasks.copy(), available_time)
     scheduled, total_used = scheduler.schedule()
