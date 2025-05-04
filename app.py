@@ -98,8 +98,15 @@ with st.form("task_form"):
     task_priority = st.selectbox("Priority", [1, 2, 3], format_func=lambda x: f"{x} - {'High' if x == 1 else 'Medium' if x == 2 else 'Low'}")
     submitted = st.form_submit_button("Add Task")
     if submitted and task_name.strip():
-         st.session_state.tasks.append(Task(task_name, task_duration, task_priority))
-         st.success("Task added successfully!")
+        total_duration = sum(t.duration for t in st.session_state.tasks) + task_duration
+        if total_duration <= available_time:
+            st.session_state.tasks.append(Task(task_name, task_duration, task_priority))
+            st.success("Task added successfully!")
+        else:
+            st.warning(f"Cannot add task! Total duration will exceed available time ({available_time} minutes)")
+
+    remaining_time = available_time - sum(t.duration for t in st.session_state.tasks) 
+    st.write(f"Remaining time: {remaining_time}/{available_time} minutes")
         
 if st.button("Schedule Tasks"):
   if st.session_state.tasks:
